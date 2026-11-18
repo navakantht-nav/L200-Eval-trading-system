@@ -1,0 +1,53 @@
+name: Deploy to GCP Agent Runtime & Cloud Run
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target GCP environment"
+        required: true
+        default: "staging"
+        type: choice
+        options:
+          - staging
+          - production
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy-geap:
+    name: Keyless WIF Deploy to Cloud Run & GCP Agent Runtime
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud via Workload Identity Federation
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_DEPLOYER_SA }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Build & Deploy Multi-Protocol Gateway + MCP Toolkit to Cloud Run
+        run: |
+          gcloud run deploy alphapulse-trading-system \
+            --source . \
+            --project "${{ secrets.GCP_PROJECT_ID }}" \
+            --region "${{ vars.GCP_REGION || 'us-central1' }}" \
+            --no-allow-unauthenticated \
+            --set-env-vars="GOOGLE_GENAI_USE_VERTEXAI=TRUE,GOOGLE_CLOUD_PROJECT=${{ secrets.GCP_PROJECT_ID }},GOOGLE_CLOUD_LOCATION=${{ vars.GCP_REGION || 'us-central1' }},ALPHAPULSE_ENABLE_CLOUD_TRACE=TRUE"
+
+      - name: Install uv & Deploy ADKv2 App to GCP Agent Runtime (AGENT_IDENTITY)
+        uses: astral-sh/setup-uv@v4
+      - run: |
+          uv sync --no-dev
+          uv run python deployment/deploy_agent_runtime.py \
+            --project "${{ secrets.GCP_PROJECT_ID }}" \
+            --location "${{ vars.GCP_REGION || 'us-central1' }}" \
+            --staging-bucket "${{ secrets.GCP_STAGING_BUCKET }}"

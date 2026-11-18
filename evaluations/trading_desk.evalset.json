@@ -1,0 +1,139 @@
+{
+  "eval_set_id": "alphapulse_trading_desk_evalset",
+  "name": "AlphaPulse Realtime Trading & Risk Desk Evaluation Suite",
+  "description": "Validates ADKv2 tool trajectories across market tick streaming, technical indicators, VaR pre-trade risk rejection, AP2 CartMandate issuance, and guardrail enforcement.",
+  "eval_cases": [
+    {
+      "eval_id": "case_01_market_pulse_and_signals",
+      "session_input": {
+        "app_name": "alphapulse_trading_desk",
+        "user_id": "eval_trader_01",
+        "state": {
+          "user:risk_profile": "MODERATE",
+          "user:exec_style": "TWAP"
+        }
+      },
+      "conversation": [
+        {
+          "invocation_id": "inv_market_pulse_1",
+          "user_content": {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Stream the latest market ticks and compute technical signals for GOOGL."
+              }
+            ]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "Here are the latest GOOGL realtime market ticks, VWAP, and technical indicators including RSI(14), MACD, and Bollinger Band market regime."
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "name": "stream_realtime_market_ticks",
+                "args": {
+                  "symbol": "GOOGL"
+                }
+              },
+              {
+                "name": "compute_technical_signals",
+                "args": {
+                  "symbol": "GOOGL"
+                }
+              }
+            ],
+            "tool_responses": []
+          }
+        }
+      ]
+    },
+    {
+      "eval_id": "case_02_oversized_order_var_rejection",
+      "session_input": {
+        "app_name": "alphapulse_trading_desk",
+        "user_id": "eval_trader_01",
+        "state": {
+          "user:risk_profile": "CONSERVATIVE"
+        }
+      },
+      "conversation": [
+        {
+          "invocation_id": "inv_risk_check_1",
+          "user_content": {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Run evaluate_pretrade_risk for a BUY of 600 shares of GOOGL at limit_price 195.00."
+              }
+            ]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "The proposed BUY of 600 GOOGL shares ($117,000.00 notional) was REJECTED because it exceeds the $50,000.00 single-order limit and 25% position concentration cap. Please resize to the recommended maximum quantity."
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "name": "evaluate_pretrade_risk",
+                "args": {
+                  "symbol": "GOOGL",
+                  "side": "BUY",
+                  "quantity": 600,
+                  "limit_price": 195.0
+                }
+              }
+            ],
+            "tool_responses": []
+          }
+        }
+      ]
+    },
+    {
+      "eval_id": "case_03_portfolio_status_check",
+      "session_input": {
+        "app_name": "alphapulse_trading_desk",
+        "user_id": "eval_trader_01",
+        "state": {}
+      },
+      "conversation": [
+        {
+          "invocation_id": "inv_portfolio_1",
+          "user_content": {
+            "role": "user",
+            "parts": [
+              {
+                "text": "Show me my current paper portfolio NAV, cash balance, and 1-day 95% VaR."
+              }
+            ]
+          },
+          "final_response": {
+            "role": "model",
+            "parts": [
+              {
+                "text": "Here is your current PAPER trading portfolio summary including cash balance, mark-to-market NAV, positions, and 1-day 95% Value-at-Risk."
+              }
+            ]
+          },
+          "intermediate_data": {
+            "tool_uses": [
+              {
+                "name": "get_portfolio_state",
+                "args": {}
+              }
+            ],
+            "tool_responses": []
+          }
+        }
+      ]
+    }
+  ]
+}

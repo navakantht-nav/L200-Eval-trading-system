@@ -1,0 +1,41 @@
+# Python & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.venv/
+venv/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+
+# Secrets & Local Env
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+service-account*.json
+
+# ADK Local Artifacts, SQLite & Eval Outputs
+**/.adk/
+*.db
+*.sqlite
+eval_results/
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+!*.tfvars.example
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store

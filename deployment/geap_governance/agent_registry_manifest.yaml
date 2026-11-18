@@ -1,0 +1,46 @@
+# Gemini Enterprise Agent Platform (GEAP) Govern: Agent Registry & Agent Gateway Manifest
+apiVersion: agentplatform.cloud.google.com/v1beta1
+kind: AgentGovernanceBundle
+metadata:
+  name: alphapulse-trading-governance
+  labels:
+    environment: production
+    track: enterprise-quant
+spec:
+  agentIdentity:
+    identityType: AGENT_IDENTITY
+    contextAwareAccessPolicy: ENFORCE_MTLS_CERTIFICATE_BINDING
+    authProviders:
+      - name: alphapulse-3lo-trader-oauth
+        mode: OAUTH2_3LO
+        scopes:
+          - trading:read
+          - trading:simulate
+          - trading:execute
+      - name: alphapulse-mcp-oidc
+        mode: CLOUD_IDENTITY_OIDC
+
+  agentRegistry:
+    agents:
+      - id: alphapulse-desk-coordinator
+        protocol: A2A
+        cardUri: "/.well-known/agent.json"
+        extensions:
+          - "https://a2ui.org/specification/v0.9"
+          - "https://ap2-protocol.org/specification/v0.2"
+      - id: alphapulse-macro-specialist
+        protocol: A2A
+        cardUri: "/a2a/macro/.well-known/agent.json"
+    mcpServers:
+      - id: alphapulse-quant-mcp-toolkit
+        transport: STREAMABLE_HTTP
+        endpointPath: "/mcp"
+        oauthProtectedResourceMetadata: "/.well-known/oauth-protected-resource"
+
+  agentGatewayPolicy:
+    egressInspection: ENABLED
+    modelArmorFloor:
+      promptInjectionAndJailbreakFilter: HIGH_AND_ABOVE
+      sensitiveDataProtectionFilter: INSPECT_AND_REDACT
+    rateLimits:
+      requestsPerMinutePerPrincipal: 120

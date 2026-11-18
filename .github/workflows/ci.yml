@@ -1,0 +1,60 @@
+name: AlphaPulse CI & Conformance Suite
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  lint-typecheck-and-test:
+    name: Lint, Typecheck & Protocol Conformance Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+
+      - name: Set up Python 3.12
+        run: uv python install 3.12
+
+      - name: Sync dependencies
+        run: uv sync --all-groups
+
+      - name: Run Ruff linter
+        run: uv run ruff check trading_agent mcp_toolkit app deployment tests
+
+      - name: Run mypy static type checks
+        run: uv run mypy trading_agent mcp_toolkit app
+
+      - name: Run unit, MCP, OAuth 2.1, A2A, A2UI & AP2 conformance tests
+        run: uv run pytest -v --cov=trading_agent --cov=mcp_toolkit --cov=app --cov-report=term-missing
+
+  terraform-validate:
+    name: Validate GCP Terraform IaC
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.5"
+
+      - name: Check Terraform formatting
+        working-directory: deployment/terraform
+        run: terraform fmt -check
+
+      - name: Initialize & validate Terraform configuration
+        working-directory: deployment/terraform
+        run: |
+          terraform init -backend=false
+          terraform validate
