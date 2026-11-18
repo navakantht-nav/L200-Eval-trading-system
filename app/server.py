@@ -87,6 +87,7 @@ def create_app(*, include_adk_runtime_routes: bool = True) -> FastAPI:
             "status": "healthy",
             "app": DEFAULT_CONFIG.app_name,
             "trading_mode": DEFAULT_CONFIG.trading_mode,
+            "pii_scrubbing_enabled": DEFAULT_CONFIG.enable_pii_scrubbing,
             "protocols": [
                 "ADKv2-Workflow",
                 "MCP-Streamable-HTTP",
@@ -97,6 +98,18 @@ def create_app(*, include_adk_runtime_routes: bool = True) -> FastAPI:
                 "SSE",
                 "WebSocket-Bidi",
             ],
+        }
+
+    @api.get("/api/v1/telemetry/observability")
+    async def observability_status() -> dict[str, Any]:
+        from trading_agent.agent import harness_plugin
+
+        return {
+            "status": "ok",
+            "otel_service_name": DEFAULT_CONFIG.otel_service_name,
+            "pii_scrubbing_enabled": DEFAULT_CONFIG.enable_pii_scrubbing,
+            "cloud_sdp_enabled": DEFAULT_CONFIG.enable_cloud_sdp,
+            "metrics": harness_plugin.metrics,
         }
 
     @api.get("/console", response_class=HTMLResponse)

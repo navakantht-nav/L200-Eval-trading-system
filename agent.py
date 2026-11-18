@@ -7,8 +7,8 @@ Programmatically adds both `src/` (if present) and the repository root to
 
 from __future__ import annotations
 
-from pathlib import Path
 import sys
+from pathlib import Path
 
 _PROJECT_ROOT = Path(__file__).resolve().parent
 _SRC_DIR = _PROJECT_ROOT / "src"

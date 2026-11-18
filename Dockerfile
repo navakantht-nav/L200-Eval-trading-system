@@ -10,7 +10,7 @@ COPY pyproject.toml README.md LICENSE ./
 COPY trading_agent ./trading_agent
 COPY mcp_toolkit ./mcp_toolkit
 COPY app ./app
-COPY agent.py ./agent.py
+COPY agent.py services.py ./
 
 RUN uv sync --no-dev
 

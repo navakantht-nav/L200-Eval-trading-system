@@ -59,8 +59,11 @@ class TradingDeskConfig:
         default_factory=lambda: frozenset({"MEME", "PUMP", "FRAUD"})
     )
 
-    # Observability, Context Compaction & Loop Caps
+    # Observability, PII Redaction, Context Compaction & Loop Caps
     enable_cloud_trace: bool = False
+    enable_pii_scrubbing: bool = True
+    enable_cloud_sdp: bool = False
+    pii_pseudonym_salt: str = "alphapulse-pii-audit-salt-v1"
     otel_service_name: str = "alphapulse-trading-agent"
     compaction_token_threshold: int = 32_000
     compaction_event_retention_size: int = 10
@@ -119,6 +122,16 @@ class TradingDeskConfig:
             ),
             enable_cloud_trace=_parse_bool(
                 os.getenv("ALPHAPULSE_ENABLE_CLOUD_TRACE"), default=False
+            ),
+            enable_pii_scrubbing=_parse_bool(
+                os.getenv("ALPHAPULSE_ENABLE_PII_SCRUBBING"), default=True
+            ),
+            enable_cloud_sdp=_parse_bool(
+                os.getenv("ALPHAPULSE_ENABLE_CLOUD_SDP"), default=False
+            ),
+            pii_pseudonym_salt=os.getenv(
+                "ALPHAPULSE_PII_PSEUDONYM_SALT",
+                "alphapulse-pii-audit-salt-v1",
             ),
             otel_service_name=os.getenv("OTEL_SERVICE_NAME", "alphapulse-trading-agent"),
         )
