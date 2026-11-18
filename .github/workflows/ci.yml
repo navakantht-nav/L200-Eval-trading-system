@@ -15,17 +15,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v4
-        with:
-          enable-cache: true
+        uses: astral-sh/setup-uv@v10
 
       - name: Set up Python 3.12
         run: uv python install 3.12
 
-      - name: Sync dependencies
+      - name: Sync dependencies from PyPI
         run: uv sync --all-groups
 
       - name: Run Ruff linter
@@ -42,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
