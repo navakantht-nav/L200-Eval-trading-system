@@ -44,7 +44,7 @@ jobs:
             --set-env-vars="GOOGLE_GENAI_USE_VERTEXAI=TRUE,GOOGLE_CLOUD_PROJECT=${{ secrets.GCP_PROJECT_ID }},GOOGLE_CLOUD_LOCATION=${{ vars.GCP_REGION || 'us-central1' }},ALPHAPULSE_ENABLE_CLOUD_TRACE=TRUE"
 
       - name: Install uv & Deploy ADKv2 App to GCP Agent Runtime (AGENT_IDENTITY)
-        uses: astral-sh/setup-uv@v10
+        uses: astral-sh/setup-uv@v10.3.3
       - run: |
           uv sync --no-dev
           uv run python deployment/deploy_agent_runtime.py \
