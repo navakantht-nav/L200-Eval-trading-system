@@ -1,7 +1,7 @@
 {
   "eval_set_id": "alphapulse_trading_desk_evalset",
   "name": "AlphaPulse Realtime Trading & Risk Desk Evaluation Suite",
-  "description": "Validates ADKv2 tool trajectories across market tick streaming, technical indicators, VaR pre-trade risk rejection, AP2 CartMandate issuance, and guardrail enforcement.",
+  "description": "Validates ADKv2 tool trajectories across market tick streaming, technical indicators, VaR pre-trade risk rejection, and portfolio status on Vertex AI.",
   "eval_cases": [
     {
       "eval_id": "case_01_market_pulse_and_signals",
@@ -28,7 +28,7 @@
             "role": "model",
             "parts": [
               {
-                "text": "Here are the latest GOOGL realtime market ticks, VWAP, and technical indicators including RSI(14), MACD, and Bollinger Band market regime."
+                "text": "Here are the latest market ticks and technical signals for GOOGL:\n\n**Market Ticks:**\n* **Last Price:** 192.50\n* **Bid:** 192.45\n* **Ask:** 192.55\n* **VWAP:** 192.10\n* **Realized Annual Volatility:** 0.27\n\n**Technical Signals:**\n* **RSI (14):** 57.14\n* **MACD:**\n  * MACD: 0.40\n  * Signal: 0.25\n  * Histogram: 0.15\n* **Bollinger Bands:**\n  * Middle SMA (20): 191.50\n  * Upper Band: 193.10\n  * Lower Band: 189.90\n  * Bandwidth %: 1.70\n  * Percent B: 0.73\n* **EMA Trend:**\n  * EMA (9): 192.25\n  * EMA (21): 191.78\n* **Alpha Signal Score:** 0.85\n* **Market Regime:** TRENDING_BULLISH\n* **Directional Conviction:** LONG_BIAS\n* **Suggested Long Stop Loss:** 190.80\n* **Suggested Short Stop Loss:** 193.70"
               }
             ]
           },
@@ -76,7 +76,7 @@
             "role": "model",
             "parts": [
               {
-                "text": "The proposed BUY of 600 GOOGL shares ($117,000.00 notional) was REJECTED because it exceeds the $50,000.00 single-order limit and 25% position concentration cap. Please resize to the recommended maximum quantity."
+                "text": "Your proposed BUY trade for 600 shares of GOOGL at $195.00 has been REJECTED due to risk policy breaches:\n* The order notional value of $117,000.00 exceeds the single-order limit of $50,000.00.\n* The post-trade concentration of 37.80% exceeds the maximum position weight of 25.00%.\nThe recommended maximum quantity for this trade is 256 shares."
               }
             ]
           },
@@ -119,7 +119,7 @@
             "role": "model",
             "parts": [
               {
-                "text": "Here is your current PAPER trading portfolio summary including cash balance, mark-to-market NAV, positions, and 1-day 95% Value-at-Risk."
+                "text": "Your current paper portfolio has a Net Asset Value (NAV) of $309,500, a cash balance of $250,000.00, and a 1-day 95% Value at Risk (VaR) of $1,075 (0.35% of NAV)."
               }
             ]
           },
