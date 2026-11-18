@@ -139,7 +139,7 @@ def create_trading_agent_and_app(
         context_cache_config=ContextCacheConfig(
             cache_intervals=10,
             ttl_seconds=config.context_cache_ttl_seconds,
-            min_tokens=2048,
+            min_tokens=4096,
         ),
         resumability_config=ResumabilityConfig(is_resumable=True),
     )

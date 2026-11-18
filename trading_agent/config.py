@@ -23,16 +23,18 @@ class TradingDeskConfig:
     """Immutable runtime, protocol, identity, and risk-governance configuration."""
 
     app_name: str = "alphapulse_trading_desk"
-    coordinator_model: str = "gemini-2.5-flash"
-    analyst_model: str = "gemini-2.5-flash"
-    risk_critic_model: str = "gemini-2.5-pro"
+    coordinator_model: str = "gemini-3.8-flash"
+    analyst_model: str = "gemini-3.8-flash"
+    risk_critic_model: str = "gemini-3.8-flash"
+    live_model: str = "gemini-3.8-live"
 
     # Session & Memory Persistence ("in_memory", "sqlite", or "vertex_ai")
     session_backend: str = "in_memory"
     memory_backend: str = "in_memory"
     session_db_url: str = "sqlite+aiosqlite:///./.adk/alphapulse_sessions.db"
     gcp_project: str = ""
-    gcp_location: str = "us-central1"
+    gcp_location: str = "global"
+    gcp_infra_region: str = "us-central1"
     agent_engine_id: str = ""
 
     # MCP Toolkit & OAuth 2.1 / Agent Identity Configuration
@@ -70,9 +72,10 @@ class TradingDeskConfig:
         """Loads configuration from environment variables with safe defaults."""
         return cls(
             app_name=os.getenv("ALPHAPULSE_APP_NAME", "alphapulse_trading_desk"),
-            coordinator_model=os.getenv("ALPHAPULSE_COORDINATOR_MODEL", "gemini-2.5-flash"),
-            analyst_model=os.getenv("ALPHAPULSE_ANALYST_MODEL", "gemini-2.5-flash"),
-            risk_critic_model=os.getenv("ALPHAPULSE_RISK_CRITIC_MODEL", "gemini-2.5-pro"),
+            coordinator_model=os.getenv("ALPHAPULSE_COORDINATOR_MODEL", "gemini-3.8-flash"),
+            analyst_model=os.getenv("ALPHAPULSE_ANALYST_MODEL", "gemini-3.8-flash"),
+            risk_critic_model=os.getenv("ALPHAPULSE_RISK_CRITIC_MODEL", "gemini-3.8-flash"),
+            live_model=os.getenv("ALPHAPULSE_LIVE_MODEL", "gemini-3.8-live"),
             session_backend=os.getenv("ALPHAPULSE_SESSION_BACKEND", "in_memory").lower(),
             memory_backend=os.getenv("ALPHAPULSE_MEMORY_BACKEND", "in_memory").lower(),
             session_db_url=os.getenv(
@@ -80,7 +83,8 @@ class TradingDeskConfig:
                 "sqlite+aiosqlite:///./.adk/alphapulse_sessions.db",
             ),
             gcp_project=os.getenv("GOOGLE_CLOUD_PROJECT", ""),
-            gcp_location=os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1"),
+            gcp_location=os.getenv("GOOGLE_CLOUD_LOCATION", "global"),
+            gcp_infra_region=os.getenv("ALPHAPULSE_INFRA_REGION", "us-central1"),
             agent_engine_id=os.getenv("VERTEX_AI_AGENT_ENGINE_ID", ""),
             mcp_server_url=os.getenv("ALPHAPULSE_MCP_SERVER_URL", "http://127.0.0.1:8080/mcp"),
             mcp_transport=os.getenv("ALPHAPULSE_MCP_TRANSPORT", "in_process").lower(),

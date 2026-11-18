@@ -136,7 +136,7 @@ def build_session_service(config: TradingDeskConfig = DEFAULT_CONFIG) -> BaseSes
 
         return VertexAiSessionService(
             project=config.gcp_project,
-            location=config.gcp_location,
+            location=config.gcp_infra_region,
             agent_engine_id=config.agent_engine_id or None,
         )
     if config.session_backend == "sqlite":
@@ -156,7 +156,7 @@ def build_memory_service(config: TradingDeskConfig = DEFAULT_CONFIG) -> BaseMemo
 
         return VertexAiMemoryBankService(
             project=config.gcp_project,
-            location=config.gcp_location,
+            location=config.gcp_infra_region,
             agent_engine_id=config.agent_engine_id or None,
         )
 

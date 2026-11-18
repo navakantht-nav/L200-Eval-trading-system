@@ -24,7 +24,7 @@ steps:
       - "--region=${_REGION}"
       - "--platform=managed"
       - "--no-allow-unauthenticated"
-      - "--set-env-vars=GOOGLE_GENAI_USE_VERTEXAI=TRUE,GOOGLE_CLOUD_PROJECT=${PROJECT_ID},GOOGLE_CLOUD_LOCATION=${_REGION},ALPHAPULSE_ENABLE_CLOUD_TRACE=TRUE"
+      - "--set-env-vars=GOOGLE_GENAI_USE_VERTEXAI=TRUE,GOOGLE_CLOUD_PROJECT=${PROJECT_ID},GOOGLE_CLOUD_LOCATION=global,ALPHAPULSE_INFRA_REGION=${_REGION},ALPHAPULSE_ENABLE_CLOUD_TRACE=TRUE"
 
 substitutions:
   _REGION: "us-central1"

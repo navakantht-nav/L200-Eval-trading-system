@@ -19,7 +19,7 @@ test:
 	uv run pytest -v --cov=trading_agent --cov=mcp_toolkit --cov=app
 
 eval:
-	uv run adk eval trading_agent evaluations/trading_desk.evalset.json --config_file_path=evaluations/test_config.json
+	GOOGLE_CLOUD_LOCATION=global uv run adk eval trading_agent evaluations/trading_desk.evalset.json --config_file_path=evaluations/test_config.json
 
 run-web:
 	uv run adk web .
@@ -39,7 +39,7 @@ deploy-cloud-run:
 		--project $(PROJECT_ID) \
 		--region $(REGION) \
 		--no-allow-unauthenticated \
-		--set-env-vars="GOOGLE_GENAI_USE_VERTEXAI=TRUE,GOOGLE_CLOUD_PROJECT=$(PROJECT_ID),GOOGLE_CLOUD_LOCATION=$(REGION),ALPHAPULSE_ENABLE_CLOUD_TRACE=TRUE"
+		--set-env-vars="GOOGLE_GENAI_USE_VERTEXAI=TRUE,GOOGLE_CLOUD_PROJECT=$(PROJECT_ID),GOOGLE_CLOUD_LOCATION=global,ALPHAPULSE_INFRA_REGION=$(REGION),ALPHAPULSE_ENABLE_CLOUD_TRACE=TRUE"
 
 deploy-agent-runtime:
 	uv run python deployment/deploy_agent_runtime.py \

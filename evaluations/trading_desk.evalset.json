@@ -1,7 +1,7 @@
 {
   "eval_set_id": "alphapulse_trading_desk_evalset",
   "name": "AlphaPulse Realtime Trading & Risk Desk Evaluation Suite",
-  "description": "Validates ADKv2 tool trajectories across market tick streaming, technical indicators, VaR pre-trade risk rejection, and portfolio status on Vertex AI.",
+  "description": "Validates ADKv2 tool trajectories across market tick streaming, technical indicators, VaR pre-trade risk rejection, and portfolio status on Vertex AI (gemini-3.8-flash).",
   "eval_cases": [
     {
       "eval_id": "case_01_market_pulse_and_signals",
@@ -28,7 +28,7 @@
             "role": "model",
             "parts": [
               {
-                "text": "Here are the latest market ticks and technical signals for GOOGL:\n\n**Market Ticks:**\n* **Last Price:** 192.50\n* **Bid:** 192.45\n* **Ask:** 192.55\n* **VWAP:** 192.10\n* **Realized Annual Volatility:** 0.27\n\n**Technical Signals:**\n* **RSI (14):** 57.14\n* **MACD:**\n  * MACD: 0.40\n  * Signal: 0.25\n  * Histogram: 0.15\n* **Bollinger Bands:**\n  * Middle SMA (20): 191.50\n  * Upper Band: 193.10\n  * Lower Band: 189.90\n  * Bandwidth %: 1.70\n  * Percent B: 0.73\n* **EMA Trend:**\n  * EMA (9): 192.25\n  * EMA (21): 191.78\n* **Alpha Signal Score:** 0.85\n* **Market Regime:** TRENDING_BULLISH\n* **Directional Conviction:** LONG_BIAS\n* **Suggested Long Stop Loss:** 190.80\n* **Suggested Short Stop Loss:** 193.70"
+                "text": "### GOOGL Realtime Market Pulse & Technical Intelligence\n\n### 1. Realtime Market Ticks & Microstructure\n* **Last Traded Price:** $193.00 (+0.41% over window)\n* **Bid / Ask:** $192.95 / $193.05 (Spread: 5.18 bps)\n* **Session VWAP:** $193.09\n* **Window Range:** Low $191.73 - High $195.35\n* **Realized Annual Volatility:** 68.84%\n\n### 2. Quantitative & Technical Signal Matrix\n* **Market Regime:** MEAN_REVERTING_RANGE\n* **Directional Conviction:** NEUTRAL_HOLD (Alpha Score: +0.05)\n* **RSI(14):** 50.66\n* **MACD (12, 26, 9):** Line 0.5983, Signal 0.6894, Histogram -0.0911\n* **EMA 9 / EMA 21:** $195.48 / $195.00\n* **Bollinger Bands (20, 2):** Upper Band $196.83, Middle SMA $195.08, Lower Band $193.33, Bandwidth 1.79%, %B 0.426\n* **Suggested Long Stop-Loss:** $193.24 | **Suggested Short Stop-Loss:** $196.40\n\n### 3. Desk Interpretation & A2UI Surface\n* Passive limit staging or TWAP execution is favored around VWAP, and the A2UI v0.9 UI surface (`market-pulse-googl`) has been emitted."
               }
             ]
           },
@@ -76,7 +76,7 @@
             "role": "model",
             "parts": [
               {
-                "text": "Your proposed BUY trade for 600 shares of GOOGL at $195.00 has been REJECTED due to risk policy breaches:\n* The order notional value of $117,000.00 exceeds the single-order limit of $50,000.00.\n* The post-trade concentration of 37.80% exceeds the maximum position weight of 25.00%.\nThe recommended maximum quantity for this trade is 256 shares."
+                "text": "### Pre-Trade Risk Assessment: REJECTED\n\nThe proposed order violates institutional risk limits and cannot proceed as requested.\n\n### Order Details\n- **Symbol:** GOOGL\n- **Side:** BUY\n- **Proposed Quantity:** 600 shares\n- **Limit Price:** $195.00\n- **Total Notional:** $117,000.00\n\n### Policy Breaches Identified\n1. **Single-Order Notional Limit:** Order Notional $117,000.00 exceeds the $50,000.00 limit.\n2. **Position Concentration Cap:** Projected Position Weight 37.78% exceeds the 25.00% cap.\n\n### Portfolio Impact & Risk Metrics\n- **Pre-Trade 1-Day 95% VaR:** 0.348%\n- **Post-Trade 1-Day 95% VaR:** 1.276% (within 3.50% ceiling)\n\n### Recommended Action\n- **Recommended Max Quantity:** 256 shares (~$49,920.00 notional) to comply with both the $50,000 notional limit and the 25% position concentration rule."
               }
             ]
           },
@@ -119,7 +119,7 @@
             "role": "model",
             "parts": [
               {
-                "text": "Your current paper portfolio has a Net Asset Value (NAV) of $309,500, a cash balance of $250,000.00, and a 1-day 95% Value at Risk (VaR) of $1,075 (0.35% of NAV)."
+                "text": "### AlphaPulse Institutional Paper Portfolio Summary\n\n* **Trading Mode:** PAPER\n* **Net Asset Value (NAV):** $309,663.00 USD\n* **Cash Balance:** $250,000.00 USD\n* **Gross Market Exposure:** $59,663.00 USD (19.27% of NAV)\n\n### Value at Risk (VaR)\n* **1-Day 95% VaR:** $1,077.43 USD (0.348% of NAV)\n* **1-Day 99% VaR:** $1,523.84 USD (0.492% of NAV)\n* **Risk Limit Status:** Within the desk ceiling of 3.50% of NAV.\n\n### Open Positions & PnL\n* **SPY:** 100 shares | Avg Cost $590.00 | Mark Price $596.63 | Market Value $59,663.00 | Unrealized PnL +$663.00"
               }
             ]
           },

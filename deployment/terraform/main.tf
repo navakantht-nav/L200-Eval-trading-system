@@ -104,6 +104,10 @@ resource "google_cloud_run_v2_service" "alphapulse_gateway" {
       }
       env {
         name  = "GOOGLE_CLOUD_LOCATION"
+        value = "global"
+      }
+      env {
+        name  = "ALPHAPULSE_INFRA_REGION"
         value = var.region
       }
       env {

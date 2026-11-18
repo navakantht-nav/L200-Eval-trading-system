@@ -41,7 +41,7 @@ jobs:
             --project "${{ secrets.GCP_PROJECT_ID }}" \
             --region "${{ vars.GCP_REGION || 'us-central1' }}" \
             --no-allow-unauthenticated \
-            --set-env-vars="GOOGLE_GENAI_USE_VERTEXAI=TRUE,GOOGLE_CLOUD_PROJECT=${{ secrets.GCP_PROJECT_ID }},GOOGLE_CLOUD_LOCATION=${{ vars.GCP_REGION || 'us-central1' }},ALPHAPULSE_ENABLE_CLOUD_TRACE=TRUE"
+            --set-env-vars="GOOGLE_GENAI_USE_VERTEXAI=TRUE,GOOGLE_CLOUD_PROJECT=${{ secrets.GCP_PROJECT_ID }},GOOGLE_CLOUD_LOCATION=global,ALPHAPULSE_INFRA_REGION=${{ vars.GCP_REGION || 'us-central1' }},ALPHAPULSE_ENABLE_CLOUD_TRACE=TRUE"
 
       - name: Install uv & Deploy ADKv2 App to GCP Agent Runtime (AGENT_IDENTITY)
         uses: astral-sh/setup-uv@v10.3.3

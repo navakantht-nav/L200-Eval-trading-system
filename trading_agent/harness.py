@@ -109,7 +109,7 @@ def screen_with_model_armor(text: str) -> str | None:
                 scopes=["https://www.googleapis.com/auth/cloud-platform"]
             )
             creds.refresh(Request())
-            location = DEFAULT_CONFIG.gcp_location
+            location = DEFAULT_CONFIG.gcp_infra_region
             endpoint = (
                 f"https://modelarmor.{location}.rep.googleapis.com/v1/"
                 f"{DEFAULT_CONFIG.model_armor_template}:sanitizeUserPrompt"
@@ -268,7 +268,7 @@ class TradingHarnessPlugin(_AdkBasePlugin):
         tool: BaseTool,
         tool_args: dict[str, Any],
         tool_context: ToolContext,
-        result: dict[str, Any],
+        result: Any,
     ) -> dict[str, Any] | None:
         tool_name = getattr(tool, "name", "unknown_tool")
         start_ns = tool_context.state.get(f"temp:span_start_{tool_name}")
@@ -278,12 +278,13 @@ class TradingHarnessPlugin(_AdkBasePlugin):
             else 0.0
         )
         self.metrics["tool_latencies_ms"].append({"tool": tool_name, "latency_ms": latency_ms})
+        tool_status = str(result.get("status", "ok")) if isinstance(result, dict) else "ok"
 
         if self._tracer is not None:
             with self._tracer.start_as_current_span(f"tool.{tool_name}") as span:
                 span.set_attribute("adk.tool.name", tool_name)
                 span.set_attribute("adk.tool.latency_ms", latency_ms)
-                span.set_attribute("adk.tool.status", str(result.get("status", "ok")))
+                span.set_attribute("adk.tool.status", tool_status)
 
         # Attach MCP App UiWidget when tool emits an MCP UI widget descriptor
         if isinstance(result, dict) and "mcp_ui_widget" in result:
@@ -307,7 +308,7 @@ class TradingHarnessPlugin(_AdkBasePlugin):
             "tool.completed",
             tool=tool_name,
             latency_ms=latency_ms,
-            status=result.get("status", "ok") if isinstance(result, dict) else "ok",
+            status=tool_status,
         )
         return None
 

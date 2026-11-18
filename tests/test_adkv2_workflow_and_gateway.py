@@ -56,7 +56,7 @@ class TestHarnessMemoryAndEvalSet(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(halt["app_desk_halt"])
         self.assertEqual(ctx.state["app:desk_halt"], True)
 
-    def test_evalset_and_root_shim_files_valid(self) -> None:
+    async def test_evalset_and_root_shim_files_valid(self) -> None:
         evalset_path = _REPO_ROOT / "evaluations" / "trading_desk.evalset.json"
         data = json.loads(evalset_path.read_text(encoding="utf-8"))
         self.assertEqual(data["eval_set_id"], "alphapulse_trading_desk_evalset")
@@ -64,6 +64,19 @@ class TestHarnessMemoryAndEvalSet(unittest.IsolatedAsyncioTestCase):
 
         harness = TradingHarnessPlugin()
         self.assertEqual(harness.metrics["runs_started"], 0)
+
+        class _DummyTool:
+            name = "load_skill"
+
+        ctx = _DummyCtx()
+        res = await harness.after_tool_callback(
+            tool=_DummyTool(),  # type: ignore[arg-type]
+            tool_args={"skill_name": "quant-regime-playbook"},
+            tool_context=ctx,  # type: ignore[arg-type]
+            result="# Quant Regime Playbook Markdown",
+        )
+        self.assertIsNone(res)
+        self.assertEqual(len(harness.metrics["tool_latencies_ms"]), 1)
 
     @unittest.skipUnless(
         importlib.util.find_spec("google.adk") is not None,

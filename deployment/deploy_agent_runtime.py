@@ -85,7 +85,9 @@ def deploy_with_agent_identity(
 def main() -> None:
     parser = argparse.ArgumentParser(description="Deploy AlphaPulse to GCP Agent Runtime")
     parser.add_argument("--project", default=os.getenv("GOOGLE_CLOUD_PROJECT", ""))
-    parser.add_argument("--location", default=os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1"))
+    parser.add_argument(
+        "--location", default=os.getenv("ALPHAPULSE_INFRA_REGION", "us-central1")
+    )
     parser.add_argument("--staging-bucket", default=os.getenv("ALPHAPULSE_STAGING_BUCKET"))
     parser.add_argument("--display-name", default="alphapulse-trading-desk")
     args = parser.parse_args()
